@@ -5,8 +5,6 @@ const Debugger = require('homie-sdk/lib/utils/debugger');
 const { config2smart }           = require('./lib/utils');
 const createOpenWeatherMapBridge = require('./app');
 
-const openWeatherMapConf = require('./config/openweathermap');
-
 const {
     MQTT_USER,
     MQTT_PASS,
@@ -34,10 +32,10 @@ const {
                 password : MQTT_PASS,
                 uri      : MQTT_URI
             },
-            openWeatherMap : {
-                appId : openWeatherMapConf.appId
-            },
-            device : {
+            // Kept for backward compatibility with existing market installs;
+            // unused since the bridge now uses Open-Meteo (no API key required).
+            openWeatherMap : {},
+            device         : {
                 id              : DEVICE_ID || MQTT_USER,
                 name            : DEVICE_NAME,
                 implementation  : DEVICE_IMPLEMENTATION,

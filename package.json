@@ -1,7 +1,10 @@
 {
     "name": "openweathermap-bridge",
-    "version": "1.0.0",
-    "description": "",
+    "version": "1.1.0",
+    "description": "Weather bridge for 2Smart standalone (powered by Open-Meteo, no API key required).",
+    "engines": {
+        "node": ">=12"
+    },
     "main": "app.js",
     "directories": {
         "lib": "lib"
@@ -23,7 +26,6 @@
         "homie-sdk": "^1.0.0",
         "livr": "^2.3.2",
         "object-path": "^0.11.5",
-        "openweathermap": "^1.0.0",
         "underscore": "^1.12.0"
     },
     "devDependencies": {

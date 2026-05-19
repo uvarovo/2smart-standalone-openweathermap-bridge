@@ -6,7 +6,6 @@ const { Validator }               = require('livr');
 const { getRandomId }             = require('homie-sdk/lib/utils/index');
 const Debugger                    = require('homie-sdk/lib/utils/debugger');
 
-const openWeatherMapConf         = require('./config/openweathermap');
 const { config2smart }           = require('./lib/utils');
 const createOpenWeatherMapBridge = require('./app');
 const { name }                   = require('./config/openweathermap');
@@ -19,9 +18,10 @@ const CONFIG_VALIDATION_RULES = {
     token           : [ 'required', 'string' ],
     deviceId        : [ 'string' ],
     firmwareVersion : [ 'string' ],
-    openWeatherMap  : { 'nested_object' : {
-        appId : [ 'required', 'string' ]
-    } }
+    // openWeatherMap was previously used to pass the OpenWeatherMap API key.
+    // Kept as an optional, free-form nested object for backward compatibility
+    // with cloud configs that still ship it; the value is unused now.
+    openWeatherMap  : [ ]
 };
 
 const readJson = filepath => require(filepath); // eslint-disable-line func-style
@@ -79,7 +79,6 @@ const validateObj = (obj, rules) => { // eslint-disable-line func-style
         const hash = createHash('sha256').update(userEmail).digest('hex');
         const username = hash;
         const rootTopic = hash;
-        const appId = openWeatherMap ? openWeatherMap.appId : openWeatherMapConf.appId;
 
         const deviceBridgeConfig = {
             smartMqttConnection : {
@@ -88,10 +87,10 @@ const validateObj = (obj, rules) => { // eslint-disable-line func-style
                 uri : mqttUri,
                 rootTopic
             },
-            openWeatherMap : {
-                appId
-            },
-            device : {
+            // Unused since the bridge switched to Open-Meteo (no API key needed);
+            // accepted for backward compatibility only.
+            openWeatherMap : openWeatherMap || {},
+            device         : {
                 id              : deviceId,
                 name,
                 firmwareName    : productId,

@@ -1,7 +1,7 @@
 {
-    "title": "OpenWeatherMap Bridge",
+    "title": "Weather Bridge (Open-Meteo)",
     "type": "openweathermap-bridge",
-    "registry": "2smartdev/2smart-standalone-openweathermap-bridge",
+    "registry": "uvarovo/2smart-standalone-openweathermap-bridge",
     "configuration": {
         "fields": [
             {
@@ -16,10 +16,9 @@
             {
                 "name": "OPENWEATHERMAP_APP_ID",
                 "type": "string",
-                "label": "OpenWeatherMap API key*",
+                "label": "OpenWeatherMap API key (deprecated, leave empty)",
                 "default": "",
                 "validation": [
-                    "required",
                     "string"
                 ]
             },

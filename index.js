@@ -24,7 +24,7 @@ const {
 
     try {
         fs.ensureDirSync(path.resolve('./etc/openweathermap')); // eslint-disable-line no-sync
-        config2smart.init(path.resolve('./etc/openweathermap/config.json'));
+        config2smart.init("/etc/openweathermap/config.json");
 
         const deviceBridgeConfig = {
             smartMqttConnection : {
@@ -44,6 +44,29 @@ const {
                 firmwareName    : DEVICE_FIRMWARE_NAME
             }
         };
+
+
+        // Apply CITY / COORDINATES from env vars (set via bridge settings UI).
+        // ENV always wins — changing settings in UI recreates the container with new env,
+        // so we always write env values to config. Manual MQTT option changes
+        // (via $options/city or $options/coordinates) are stored in the same config file
+        // and will be used on the next restart unless the user changes settings again.
+        const COORDS_RE_ENV = /^\s*(-?\d+(?:\.\d+)?)\s*[,\s]\s*(-?\d+(?:\.\d+)?)\s*$/;
+        const envCoords = (process.env.COORDINATES || '').trim();
+        const envCity   = (process.env.CITY || '').trim();
+
+        if (envCoords && COORDS_RE_ENV.test(envCoords)) {
+            const [ , lat, lon ] = envCoords.match(COORDS_RE_ENV);
+
+            config2smart.set('openweathermap.latitude', parseFloat(lat));
+            config2smart.set('openweathermap.longitude', parseFloat(lon));
+            config2smart.set('openweathermap.city', `${parseFloat(lat)}, ${parseFloat(lon)}`);
+        } else if (envCity) {
+            // Clear old coordinates so the device geocodes the new city on startup
+            config2smart.set('openweathermap.city', envCity);
+            config2smart.set('openweathermap.latitude', null);
+            config2smart.set('openweathermap.longitude', null);
+        }
 
         const openWeatherMapBridge = createOpenWeatherMapBridge({ deviceBridgeConfig, debug });
 

@@ -8,15 +8,24 @@
                 "name": "DEVICE_NAME",
                 "type": "string",
                 "label": "Device name",
-                "default": "OpenWeatherMap Bridge",
+                "default": "Weather Bridge",
                 "validation": [
                     "string"
                 ]
             },
             {
-                "name": "OPENWEATHERMAP_APP_ID",
+                "name": "CITY",
                 "type": "string",
-                "label": "OpenWeatherMap API key (deprecated, leave empty)",
+                "label": "City (e.g. Moscow)",
+                "default": "Moscow",
+                "validation": [
+                    "string"
+                ]
+            },
+            {
+                "name": "COORDINATES",
+                "type": "string",
+                "label": "Coordinates \"lat, lon\" (optional, overrides city)",
                 "default": "",
                 "validation": [
                     "string"
